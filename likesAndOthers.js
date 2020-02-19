@@ -1,3 +1,6 @@
+// Code to display names from the arrName and reistict the total length of the display string to < 100 charactes 
+
+
 const arrNames = [
   " ",
   "Ankush",
