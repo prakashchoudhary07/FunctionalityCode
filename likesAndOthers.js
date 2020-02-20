@@ -17,7 +17,7 @@ let tempArrName = [];
 
 arrNames.forEach(element => {
   element = element.trim();
-  if (/^[a-zA-Z]+$/.test(element)) {
+  if (/^[a-zA-Z]*[ ]*[a-zA-Z]+$/.test(element)) {
     tempArrName.push(element);
   }
 });
