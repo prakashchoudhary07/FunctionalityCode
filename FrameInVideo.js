@@ -78,11 +78,20 @@ function getFramesOccurances(video, frame) {
 }
 
 function getHash(frame) {
+  //USING MAP
+  /* 
   const map1 = new Map();
   for (let letter of frame) {
     map1.set(letter, letter.charCodeAt());
   }
-  return map1;
+  return map1; */
+
+  //USING SET
+  const set1 = new Set();
+  for (let letter of frame) {
+    set1.add(letter);
+  }
+  return set1;
 }
 
 function getTargetOccurances(video, targetFrameHash) {
