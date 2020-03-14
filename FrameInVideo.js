@@ -23,6 +23,11 @@ const testCases = {
     video: 'prsk',
     target: 'skpr',
     output: [[0, 3]]
+  },
+  video5: {
+    video: 'pppkask',
+    target: 'pppk',
+    output: []
   }
 };
 // [VIDEO][FRAME][OUTPUT]
@@ -72,7 +77,12 @@ Object.keys(testCases).forEach((key, index) => {
 
 function getFramesOccurances(video, frame) {
   const targetFrameHash = getHash(frame);
-  const targetFrameOccurences = getTargetOccurances(video, targetFrameHash);
+  const sizeOfFrame = frame.length;
+  const targetFrameOccurences = getTargetOccurances(
+    video,
+    sizeOfFrame,
+    targetFrameHash
+  );
   console.log(targetFrameOccurences);
   return targetFrameOccurences;
 }
@@ -94,13 +104,14 @@ function getHash(frame) {
   return set1;
 }
 
-function getTargetOccurances(video, targetFrameHash) {
+function getTargetOccurances(video, sizeOfFrame, targetFrameHash) {
   let listOfOccurrences = [];
   let patternStatus = false;
-  if (!(video.length <= 0 && targetFrameHash.size <= 0)) {
-    for (let i = 0; i < video.length - 1; i += targetFrameHash.size) {
+  if (!(video.length <= 0 && sizeOfFrame <= 0)) {
+    for (let i = 0; i < video.length - 1; i += sizeOfFrame) {
+      // patternStatus = false;
       let j;
-      for (j = i; j < i + targetFrameHash.size; j++) {
+      for (j = i; j < i + sizeOfFrame; j++) {
         if (targetFrameHash.has(video[j])) {
           patternStatus = true;
         } else {
