@@ -1,92 +1,70 @@
 // Code to display names from the arrName
 // and restict the total length of the display string to < S charactes
-const COMMA = ',';
-const SPACE = ' ';
-const AND = 'and';
-const BE_FIRST_TO_LIKE = 'Be the first one to like this.';
-const LIKED_THIS = 'liked this.';
-const MORE_LIKED_THIS = 'more liked this.';
 
-function getProcessedInput(arr) {
-  const tempArr = [];
-  arr.forEach(element => {
-    tempArr.push(element);
-  });
-  getSortedArray(tempArr);
-  return tempArr;
-}
-
-function getSortedArray(arr) {
-  arr.sort((a, b) => a.length - b.length);
-}
-
-function moreItems(arr, maxStrLen) {
-
-  let tempArr = [];
-  let strLen = 0;
-  let str = '';
-  arr.forEach((val, i) => {
-    if (strLen < (maxStrLen - 25)) { // Space reserved for ending charecters
-      strLen += (val.length + 2) // Name,   :(Space and comma occupies 2 char bolck)
-      tempArr.push(i);
-    }
-  });
-
-  if (tempArr.length < arr.length) {
-    for (let i = 0, max = tempArr.length; i < max; i++) {
-      str += arr[i];
-      if (max - i > 1) {
-        str += `${COMMA}${SPACE}`;
-      }
-      else if (max - i === 1) {
-        str += `${SPACE}${AND}${SPACE}`;
-      }
-    }
-  }
-  else {
-    for (let i = 0, max = tempArr.length; i < max; i++) {
-      str += arr[i];
-      if (max - i > 2) {
-        str += `${COMMA}${SPACE}`;
-      }
-      else if (max - i === 2) {
-        str += `${SPACE}${AND}${SPACE}`;
-      }
-      else if (max - i === 1) {
-        str += `${SPACE}`;
-      }
-    }
-  }
-
-
-  let remainingLike = (arr.length - tempArr.length);
-
-  if (remainingLike > 0) {
-    str += `${remainingLike}${SPACE}${MORE_LIKED_THIS}`;
-  } else {
-    str += LIKED_THIS;
-  }
-
-  return str;
-}
-
-
-
-
-function displayString(arrNames, maxStringLength = 100) {
+function displayString(arrNames) {
+  const COMMASTRING = ',';
+  const SPACESTRING = ' ';
+  const ANDSTRING = 'and';
+  const BEFIRSTTOLIKE = 'Be the first one to like this.';
+  const LIKEDTHIS = 'liked this.';
+  const OTHERSLIKEDTHIS = 'others liked this.';
   let resultStr = '';
-  const tempArrName = getProcessedInput(arrNames);
+  const tempArrName = [];
 
+  arrNames.forEach(element => {
+    element = element.trim();
+    if (!/^[\S]+$/.test(element)) {
+      return;
+    }
+    tempArrName.push(element);
+  });
+
+  tempArrName.sort((a, b) => a.length - b.length);
   let numberOfLikes = tempArrName.length;
+
   switch (numberOfLikes) {
     case 0:
-      resultStr = BE_FIRST_TO_LIKE;
+      resultStr = BEFIRSTTOLIKE;
       break;
     case 1:
-      resultStr += `${tempArrName[0]}${SPACE}${LIKED_THIS}`;
+      resultStr += tempArrName[0] + SPACESTRING + LIKEDTHIS;
       break;
+    // case 2:
+    //   displayString += tempArrName[0] + " and " + tempArrName[1] + " liked this.";
+    //   break;
+
     default:
-      resultStr = ((maxStringLength > 0) ? moreItems(tempArrName, maxStringLength) : '');
+      let i;
+      let lengthOfDisplayString = 0;
+
+      for (i = 0; i < tempArrName.length && lengthOfDisplayString < 70; i++) {
+        lengthOfDisplayString += tempArrName[i].length + 2;
+        resultStr += tempArrName[i];
+        if (i == tempArrName.length - 2) {
+          resultStr += SPACESTRING + ANDSTRING + SPACESTRING;
+        } else if (i == tempArrName.length - 1) {
+          resultStr += SPACESTRING;
+        } else if (lengthOfDisplayString < 70) {
+          resultStr += COMMASTRING + SPACESTRING;
+        } else {
+          resultStr += SPACESTRING;
+        }
+      }
+
+      // resultStr = resultStr.slice(0, -2);
+      // resultStr += ' ';
+
+      let remainingLike = tempArrName.length - i;
+      if (remainingLike > 0) {
+        resultStr +=
+          ANDSTRING +
+          SPACESTRING +
+          remainingLike +
+          SPACESTRING +
+          OTHERSLIKEDTHIS;
+      } else {
+        resultStr += LIKEDTHIS;
+      }
   }
   return resultStr;
 }
